@@ -4,7 +4,6 @@ from django.db import models
 from rest_framework.exceptions import ValidationError
 from simple_history.models import HistoricalRecords
 
-
 from balances.models import Balance
 
 
@@ -12,7 +11,8 @@ class Transaction(models.Model):
     TRANSACTION_TYPES = [('outgoing', 'Outgoing'), ('incoming', 'Incoming'), ('transfer', 'Transfer'), ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="transactions")
-    balance_from = models.ForeignKey(Balance, on_delete=models.CASCADE, related_name="transactions")
+    balance_from = models.ForeignKey(Balance, null=True, blank=True, on_delete=models.CASCADE,
+                                     related_name="transactions")
     balance_to = models.ForeignKey(Balance, null=True, blank=True, on_delete=models.CASCADE, related_name="transfers")
     category = models.ForeignKey("categories.Category", on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -30,6 +30,7 @@ class Transaction(models.Model):
         return f"{self.user.username} - {self.name} ({self.transaction_type} - {self.currency})"
 
     def clean(self):
+        """Custom validation for transaction type-specific rules."""
         if self.transaction_type == 'transfer':
             if not self.balance_to:
                 raise ValidationError("A 'transfer' transaction requires a 'balance_to' field.")
@@ -41,3 +42,8 @@ class Transaction(models.Model):
         elif self.transaction_type == 'outgoing':
             if self.balance_to:
                 raise ValidationError("An 'outgoing' transaction cannot have a 'balance_to' field.")
+
+    def save(self, *args, **kwargs):
+        """Ensure the clean method is called before saving."""
+        self.full_clean()  # Call clean to enforce validation
+        super().save(*args, **kwargs)
