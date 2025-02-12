@@ -1,3 +1,16 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from .models import Category
+from .serializers import CategorySerializer
 
-# Create your views here.
+class CategoryViewSet(viewsets.ModelViewSet):
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access this endpoint
+
+    def get_queryset(self):
+        # Return only the categories belonging to the authenticated user
+        return Category.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        # Automatically associate the category with the authenticated user
+        serializer.save(user=self.request.user)
