@@ -62,6 +62,7 @@ class CategoryViewSetTests(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.other_user = User.objects.create_user(username='otheruser', password='otherpassword')
         self.client.force_authenticate(user=self.user)
 
     def test_create_category(self):

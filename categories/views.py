@@ -1,11 +1,13 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+
+from utils.permissions import IsOwner
 from .models import Category
 from .serializers import CategorySerializer
 
+
 class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access this endpoint
+    permission_classes = [IsOwner]
 
     def get_queryset(self):
         # Return only the categories belonging to the authenticated user

@@ -1,13 +1,13 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
 
+from utils.permissions import IsOwner
 from .models import Balance
 from .serializers import BalanceSerializer
 
 
 class BalanceViewSet(viewsets.ModelViewSet):
     serializer_class = BalanceSerializer
-    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access this endpoint
+    permission_classes = [IsOwner]
 
     def get_queryset(self):
         # Return only the balances belonging to the authenticated user
