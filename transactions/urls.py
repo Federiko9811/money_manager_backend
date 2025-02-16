@@ -1,12 +1,13 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import TransactionViewSet
+from .views import IncomeOutcomeTransactionViewSet, TransferTransactionViewSet, BaseTransactionViewSet
 
-# Create a router and register the TransactionViewSet
 router = DefaultRouter()
-router.register(r'transactions', TransactionViewSet, basename='transaction')
+router.register(r'transactions', BaseTransactionViewSet, basename='transaction')
+router.register(r'income-outcome-transactions', IncomeOutcomeTransactionViewSet, basename='income_outcome_transaction')
+router.register(r'transfer-transactions', TransferTransactionViewSet, basename='transfer_transaction')
 
 urlpatterns = [
-    path('', include(router.urls)),  # Include the router URLs
+    path('', include(router.urls)),
 ]

@@ -1,18 +1,38 @@
-from rest_framework import viewsets
+from rest_framework import mixins, viewsets
 
 from utils.permissions import IsOwner
-from .models import Transaction
-from .serializers import TransactionSerializer
+from .models import IncomeOutcomeTransaction, TransferTransaction, BaseTransaction
+from .serializers import IncomeOutcomeTransactionSerializer, TransferTransactionSerializer, BaseTransactionSerializer
 
 
-class TransactionViewSet(viewsets.ModelViewSet):
-    serializer_class = TransactionSerializer
+class BaseTransactionViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """Base view set for all transaction types."""
+    serializer_class = BaseTransactionSerializer
     permission_classes = [IsOwner]
 
     def get_queryset(self):
-        # Return only the transactions belonging to the authenticated user
-        return Transaction.objects.filter(user=self.request.user)
+        return BaseTransaction.objects.filter(user=self.request.user)
+
+
+class IncomeOutcomeTransactionViewSet(viewsets.ModelViewSet):
+    """View set for income and outcome transactions."""
+    serializer_class = IncomeOutcomeTransactionSerializer
+    permission_classes = [IsOwner]
+
+    def get_queryset(self):
+        return IncomeOutcomeTransaction.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        # Automatically associate the transaction with the authenticated user
+        serializer.save(user=self.request.user)
+
+
+class TransferTransactionViewSet(viewsets.ModelViewSet):
+    """View set for transfer transactions."""
+    serializer_class = TransferTransactionSerializer
+    permission_classes = [IsOwner]
+
+    def get_queryset(self):
+        return TransferTransaction.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
         serializer.save(user=self.request.user)
