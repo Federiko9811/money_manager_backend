@@ -1,13 +1,15 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from rest_framework.test import APIClient
 from rest_framework import status
-from django.contrib.auth import get_user_model
+from rest_framework.test import APIClient
+
 from .models import Category
 from .serializers import CategorySerializer
 
 # Use the custom user model
 User = get_user_model()
+
 
 class CategoryModelTests(TestCase):
     def setUp(self):

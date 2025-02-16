@@ -10,6 +10,7 @@ from transactions.serializers import TransferTransactionSerializer
 
 User = get_user_model()
 
+
 class TransferTransactionTests(TestCase):
     def setUp(self):
         self.client = APIClient()

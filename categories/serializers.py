@@ -1,5 +1,7 @@
 from rest_framework import serializers
+
 from .models import Category
+
 
 class CategorySerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)  # Display user as a string (e.g., username)

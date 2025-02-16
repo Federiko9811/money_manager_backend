@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('transactions', '0001_initial'),
     ]
@@ -13,6 +12,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='incomeoutcometransaction',
             name='transaction_type',
-            field=models.CharField(choices=[('income', 'Income'), ('outcome', 'Outcome')], default='outcome', max_length=10),
+            field=models.CharField(choices=[('income', 'Income'), ('outcome', 'Outcome')], default='outcome',
+                                   max_length=10),
         ),
     ]

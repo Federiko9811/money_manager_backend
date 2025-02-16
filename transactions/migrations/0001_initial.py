@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -23,9 +22,11 @@ class Migration(migrations.Migration):
                 ('amount', models.DecimalField(decimal_places=2, max_digits=15)),
                 ('date', models.DateTimeField()),
                 ('note', models.TextField(blank=True, null=True)),
-                ('currency', models.CharField(choices=[('EUR', 'Euro'), ('USD', 'US Dollar')], default='EUR', max_length=3)),
+                ('currency',
+                 models.CharField(choices=[('EUR', 'Euro'), ('USD', 'US Dollar')], default='EUR', max_length=3)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='transactions', to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='transactions',
+                                           to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'db_table': 'transactions',
@@ -34,9 +35,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='IncomeOutcomeTransaction',
             fields=[
-                ('basetransaction_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='transactions.basetransaction')),
-                ('transaction_type', models.CharField(choices=[('outgoing', 'Outgoing'), ('incoming', 'Incoming')], max_length=10)),
-                ('balance', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='income_outcome_transactions', to='balances.balance')),
+                ('basetransaction_ptr',
+                 models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True,
+                                      primary_key=True, serialize=False, to='transactions.basetransaction')),
+                ('transaction_type',
+                 models.CharField(choices=[('outgoing', 'Outgoing'), ('incoming', 'Incoming')], max_length=10)),
+                ('balance', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                              related_name='income_outcome_transactions', to='balances.balance')),
             ],
             options={
                 'db_table': 'income_outcome_transactions',
@@ -46,9 +51,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TransferTransaction',
             fields=[
-                ('basetransaction_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='transactions.basetransaction')),
-                ('balance_from', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='transfers_sent', to='balances.balance')),
-                ('balance_to', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='transfers_received', to='balances.balance')),
+                ('basetransaction_ptr',
+                 models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True,
+                                      primary_key=True, serialize=False, to='transactions.basetransaction')),
+                ('balance_from',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='transfers_sent',
+                                   to='balances.balance')),
+                ('balance_to',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='transfers_received',
+                                   to='balances.balance')),
             ],
             options={
                 'db_table': 'transfer_transactions',
