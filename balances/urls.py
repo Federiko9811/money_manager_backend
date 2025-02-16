@@ -5,7 +5,7 @@ from .views import BalanceViewSet
 
 # Create a router and register the BalanceViewSet
 router = DefaultRouter()
-router.register(r'balances', BalanceViewSet, basename='balance')
+router.register(r'', BalanceViewSet, basename='balance')
 
 urlpatterns = [
     path('', include(router.urls)),  # Include the router URLs
