@@ -1,7 +1,10 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 from rest_framework.exceptions import ValidationError
+
+User = get_user_model()
 
 
 class BaseTransaction(models.Model):
@@ -9,7 +12,7 @@ class BaseTransaction(models.Model):
         db_table = 'transactions'
 
     """Abstract base class for all transactions."""
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="transactions")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="transactions")
     name = models.CharField(max_length=255)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField()

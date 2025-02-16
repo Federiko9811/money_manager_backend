@@ -1,10 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from core import settings
-
+User = get_user_model()
 
 class Category(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="categories")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="categories")
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
