@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from datetime import timedelta
+from os import getenv
 from pathlib import Path
 
 from django.conf import settings
@@ -63,7 +64,8 @@ INSTALLED_APPS = [
 
     'balances.apps.BalancesConfig',
     'transactions.apps.TransactionsConfig',
-    'categories.apps.CategoriesConfig'
+    'categories.apps.CategoriesConfig',
+    'authentication.apps.AuthenticationConfig'
 ]
 
 REST_FRAMEWORK = {
@@ -74,9 +76,20 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': 'rest_framework.permissions.IsAuthenticated',
 }
 
+REFRESH_TOKEN_LIFETIME = timedelta(days=9999)
+ACCESS_TOKEN_LIFETIME = timedelta(days=1)
+
+AUTH_COOKIE = 'access'
+AUTH_REFRESH_MAX_AGE = REFRESH_TOKEN_LIFETIME.total_seconds()
+AUTH_ACCESS_MAX_AGE = ACCESS_TOKEN_LIFETIME.total_seconds()
+AUTH_COOKIE_SECURE = getenv("AUTH_COOKIE_SECURE", "True") == "True"
+AUTH_COOKIE_HTTP_ONLY = True
+AUTH_COOKIE_PATH = '/'
+AUTH_COOKIE_SAMESITE = 'None'
+
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=9999),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": ACCESS_TOKEN_LIFETIME,
+    "REFRESH_TOKEN_LIFETIME": REFRESH_TOKEN_LIFETIME,
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": False,
