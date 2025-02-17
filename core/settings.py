@@ -29,15 +29,6 @@ SECRET_KEY = 'django-insecure-@l4&0sj*t@0791i04t=$i3%6&c+%zr0&m#6x3_a7g$8w0^-uec
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
-    'http://127.0.0.1:3000',
-    'http://localhost:3000',
-
-    # Add other allowed origins here
-]
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Money Manager API',
@@ -70,9 +61,9 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'authentication.authentication.CustomJWTAuthentication',
+    ],
     'DEFAULT_PERMISSION_CLASSES': 'rest_framework.permissions.IsAuthenticated',
 }
 
@@ -82,10 +73,30 @@ ACCESS_TOKEN_LIFETIME = timedelta(days=1)
 AUTH_COOKIE = 'access'
 AUTH_REFRESH_MAX_AGE = REFRESH_TOKEN_LIFETIME.total_seconds()
 AUTH_ACCESS_MAX_AGE = ACCESS_TOKEN_LIFETIME.total_seconds()
-AUTH_COOKIE_SECURE = getenv("AUTH_COOKIE_SECURE", "True") == "True"
+AUTH_COOKIE_SECURE = True  # TODO Change to True in production
 AUTH_COOKIE_HTTP_ONLY = True
 AUTH_COOKIE_PATH = '/'
 AUTH_COOKIE_SAMESITE = 'None'
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+]
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+]
+
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = False  # Use True only with HTTPS
+
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = False  # Use True only with HTTPS
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": ACCESS_TOKEN_LIFETIME,
