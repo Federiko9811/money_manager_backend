@@ -9,5 +9,5 @@ router.register(r'income-outcome-transactions', IncomeOutcomeTransactionViewSet,
 router.register(r'transfer-transactions', TransferTransactionViewSet, basename='transfer_transaction')
 
 urlpatterns = [
-    path('', include(router.urls)),  # ❌ Removed the incorrect namespace usage
+    path('', include(router.urls)),
 ]

@@ -4,7 +4,7 @@ from .models import Balance
 
 
 class BalanceSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)  # Display user as a string (e.g., username)
+    user = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Balance
@@ -16,4 +16,4 @@ class BalanceSerializer(serializers.ModelSerializer):
             'currency',
             'created_at',
         ]
-        read_only_fields = ['created_at', 'user']  # Ensure these fields are read-only
+        read_only_fields = ['created_at', 'user']
