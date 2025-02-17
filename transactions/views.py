@@ -7,6 +7,7 @@ from .serializers import IncomeOutcomeTransactionSerializer, TransferTransaction
 
 class BaseTransactionViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """Base view set for all transaction types."""
+    queryset = BaseTransaction.objects.all()
     serializer_class = BaseTransactionSerializer
     permission_classes = [IsOwner]
 
@@ -16,6 +17,7 @@ class BaseTransactionViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 class IncomeOutcomeTransactionViewSet(viewsets.ModelViewSet):
     """View set for income and outcome transactions."""
+    queryset = IncomeOutcomeTransaction.objects.all()
     serializer_class = IncomeOutcomeTransactionSerializer
     permission_classes = [IsOwner]
 
@@ -28,6 +30,7 @@ class IncomeOutcomeTransactionViewSet(viewsets.ModelViewSet):
 
 class TransferTransactionViewSet(viewsets.ModelViewSet):
     """View set for transfer transactions."""
+    queryset = TransferTransaction.objects.all()
     serializer_class = TransferTransactionSerializer
     permission_classes = [IsOwner]
 

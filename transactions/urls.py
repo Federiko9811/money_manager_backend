@@ -8,8 +8,6 @@ router.register(r'', BaseTransactionViewSet, basename='transaction')
 router.register(r'income-outcome-transactions', IncomeOutcomeTransactionViewSet, basename='income_outcome_transaction')
 router.register(r'transfer-transactions', TransferTransactionViewSet, basename='transfer_transaction')
 
-
 urlpatterns = [
-    path('', include((router.urls, 'transactions'), namespace='transactions')),
-    # Include the router URLs with namespace
+    path('', include(router.urls)),  # ❌ Removed the incorrect namespace usage
 ]
