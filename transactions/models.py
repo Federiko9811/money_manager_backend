@@ -13,7 +13,7 @@ class BaseTransaction(models.Model):
 
     """Abstract base class for all transactions."""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="transactions")
-    name = models.CharField(max_length=255)
+    category = models.ForeignKey('categories.Category', on_delete=models.CASCADE, related_name="transactions")
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     date = models.DateField()
     note = models.TextField(blank=True, null=True)
@@ -29,7 +29,7 @@ class BaseTransaction(models.Model):
         return None
 
     def __str__(self):
-        return f"{self.user.username} - {self.name} ({self.amount} {self.currency})"
+        return f"{self.user.username} - {self.category.name} ({self.amount} {self.currency})"
 
 
 # transactions/models.py

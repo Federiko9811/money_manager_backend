@@ -7,10 +7,11 @@ from .models import IncomeOutcomeTransaction, TransferTransaction, BaseTransacti
 
 class BaseTransactionSerializer(serializers.ModelSerializer):
     """Unified serializer for listing all transactions."""
+    categories = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = BaseTransaction
-        fields = ['id', 'name', 'amount', 'date', 'note', 'currency', 'detail_url']
+        fields = ['id', 'category', 'amount', 'date', 'note', 'currency', 'detail_url']
         read_only_fields = ['user', 'created_at']
 
 
