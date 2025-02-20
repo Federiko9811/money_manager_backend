@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
 
@@ -25,12 +24,6 @@ class Balance(models.Model):
 
         self.amount = (income + transfers_in) - (outcome + transfers_out)
         self.save(update_fields=['amount'])
-
-    def save(self, *args, **kwargs):
-        """Ensure the balance is valid before saving."""
-        if self.amount < 0:
-            raise ValidationError("Balance amount cannot be negative.")
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user.username} - {self.name} ({self.currency}) - {self.amount}"

@@ -2,7 +2,10 @@ from rest_framework import mixins, viewsets
 
 from utils.permissions import IsOwner
 from .models import IncomeOutcomeTransaction, TransferTransaction, BaseTransaction
-from .serializers import IncomeOutcomeTransactionSerializer, TransferTransactionSerializer, BaseTransactionSerializer
+from .serializers.base_transaction_serializers import BaseTransactionSerializer
+from .serializers.income_outcome_transaction_serializers import IncomeOutcomeTransactionSerializer, \
+    CreateIncomeOutcomeTransactionSerializer
+from .serializers.transfer_transaction_serializers import TransferTransactionSerializer
 
 
 class BaseTransactionViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -18,8 +21,12 @@ class BaseTransactionViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 class IncomeOutcomeTransactionViewSet(viewsets.ModelViewSet):
     """View set for income and outcome transactions."""
     queryset = IncomeOutcomeTransaction.objects.all()
-    serializer_class = IncomeOutcomeTransactionSerializer
     permission_classes = [IsOwner]
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return CreateIncomeOutcomeTransactionSerializer
+        return IncomeOutcomeTransactionSerializer
 
     def get_queryset(self):
         return IncomeOutcomeTransaction.objects.filter(user=self.request.user)
