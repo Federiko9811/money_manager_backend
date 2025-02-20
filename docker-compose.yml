@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+    money-manager-db:
+        image: postgres
+        container_name: money-manager-db
+        restart: unless-stopped
+        environment:
+            - POSTGRES_DB=${DB_NAME}
+            - POSTGRES_USER=${DB_USER}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+
+    money-manager-backend:
+        build: .
+        ports:
+            - "8005:8005"
+        container_name: money-manager-backend
+        restart: unless-stopped
+        command: >
+            sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8005"
+        pull_policy: build
+        environment:
+            - DB_USER=${DB_USER}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - DB_HOST=${DB_HOST}
+            - DB_PORT=${DB_PORT}
+            - DB_NAME=${DB_NAME}
+        depends_on:
+            - money-manager-db
+volumes:
+    postgres_data:
