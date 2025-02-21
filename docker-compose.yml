@@ -5,6 +5,7 @@ services:
         image: postgres
         container_name: money-manager-db
         restart: unless-stopped
+        pull_policy: build
         environment:
             - POSTGRES_DB=${DB_NAME}
             - POSTGRES_USER=${DB_USER}
