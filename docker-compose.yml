@@ -12,7 +12,7 @@ services:
         volumes:
             - postgres_data:/var/lib/postgresql/data
         ports:
-            - ${DB_PORT}:${DB_PORT}"
+            - "${DB_PORT}:5432"
 
     money-manager-backend:
         build: .
