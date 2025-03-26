@@ -1,3 +1,6 @@
+import hashlib
+import uuid
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -12,6 +15,7 @@ class BaseTransaction(models.Model):
         db_table = 'transactions'
 
     """Abstract base class for all transactions."""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="transactions")
     category = models.ForeignKey('categories.Category', on_delete=models.CASCADE, related_name="transactions")
     amount = models.DecimalField(max_digits=15, decimal_places=2)
@@ -27,6 +31,24 @@ class BaseTransaction(models.Model):
         elif hasattr(self, 'transfertransaction'):
             return reverse('transfer_transaction-detail', args=[self.transfertransaction.id])
         return None
+
+    transaction_hash = models.CharField(
+        max_length=64,
+        unique=True,
+        null=True,
+        blank=True
+    )
+
+    def generate_transaction_hash(self):
+        """Generate a unique transaction hash"""
+        return hashlib.sha256(
+            f"{self.user.id}{self.amount}{self.date}{self.created_at}".encode()
+        ).hexdigest()
+
+    def save(self, *args, **kwargs):
+        if not self.transaction_hash:
+            self.transaction_hash = self.generate_transaction_hash()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user.username} - {self.category.name} ({self.amount} {self.currency})"
