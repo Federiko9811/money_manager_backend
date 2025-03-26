@@ -1,4 +1,6 @@
-from rest_framework import mixins, viewsets
+from django.db import transaction
+from rest_framework import mixins, viewsets, serializers
+from rest_framework.exceptions import ValidationError
 
 from utils.permissions import IsOwner
 from .models import IncomeOutcomeTransaction, TransferTransaction, BaseTransaction
@@ -44,5 +46,19 @@ class TransferTransactionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return TransferTransaction.objects.filter(user=self.request.user)
 
+    @transaction.atomic
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        """
+        Perform a transfer transaction with complete atomic transaction
+        """
+        try:
+            transfer = serializer.save(user=self.request.user)
+
+            # Update source balance
+            transfer.balance_from.update_amount()
+
+            # Update destination balance
+            transfer.balance_to.update_amount()
+        except ValidationError as e:
+            # Handle specific validation errors
+            raise serializers.ValidationError(str(e))
